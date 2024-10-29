@@ -23,7 +23,7 @@ node('ubuntu-Appserver-3120')
     {
         /* This builds the actual image; 
         * This is synonymous to docker build on the command line */
-        app = docker.build("xamq/HW4")
+        app = docker.build("xamq/hw4")
     }
     stage('Post-to-dockerhub')
     {
