@@ -8,7 +8,7 @@
     {
       agent
       {
-        label 'ubuntu-APPserver'
+        label 'ubuntu-Appserver-3120'
       }
       steps
       {
@@ -20,7 +20,7 @@
     {
       agent
       {
-        label 'ubuntu-APPserver'
+        label 'ubuntu-Appserver-3120'
       }
       steps
       {
@@ -35,14 +35,14 @@
     // from here down to next comment 
     stage('SonarQube Analysis') {
         agent {
-            label 'ubuntu-APPserver'
+            label 'ubuntu-Appserver-3120'
         }
         steps {
             script {
                 def scannerHome = tool 'SonarQubeScanner'
                 withSonarQubeEnv('sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner \
-                        -Dsonar.projectKey=ChatApp \
+                        -Dsonar.projectKey=hw5_realest \
                         -Dsonar.sources=."
                 }
             }
@@ -54,7 +54,7 @@
     {
       agent
       {
-        label 'ubuntu-APPserver'
+        label 'ubuntu-Appserver-3120'
       }
       steps
       {
@@ -78,7 +78,7 @@
          {
             docker.withRegistry("https://registry.hub.docker.com", "zimmate")
             {
-                def app = docker.image("zimmate222/snakegame")
+                def app = docker.image("MaxQuist/hw5_realest")
                 app.push("latest")
  
             }
@@ -91,7 +91,7 @@
     {
       agent
       {
-        label 'ubuntu-APPserver'
+        label 'ubuntu-Appserver-3120'
       }
       steps
       {
