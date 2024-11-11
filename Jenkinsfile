@@ -78,7 +78,7 @@
          {
             docker.withRegistry("https://registry.hub.docker.com", "maxq")
             {
-                def app = docker.image("MaxQuist/hw5_realest")
+                def app = docker.image("xamq/hw5_realest")
                 app.push("latest")
  
             }
