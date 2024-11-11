@@ -19,11 +19,33 @@ node('ubuntu-Appserver-3120')
             severity: 'critical'
          )
        }
+        stage('SonarQube Analysis')
+    {
+        agent {
+            label 'ubuntu-Appserver-3120'
+        }
+        steps {
+            script {
+                def scannerHome = tool 'SonarQubeScanner'
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=gameapp \
+                    -Dsonar.sources=."
+                }
+            }
+        }
+    }
     stage('Build-and-Tag')
     {
-        /* This builds the actual image; 
-        * This is synonymous to docker build on the command line */
-        app = docker.build("xamq/hw4")
+        agent {
+            label 'ubuntu-Appserver-3120'
+        }
+        steps {
+            script {
+                def app = docker.build("MaxQuist/hw5")
+                app.tag("latest")
+            }
+        }
     }
     stage('Post-to-dockerhub')
     {
@@ -39,4 +61,5 @@ node('ubuntu-Appserver-3120')
         sh "docker-compose up -d"
     }
  
+}
 }
