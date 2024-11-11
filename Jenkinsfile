@@ -60,7 +60,7 @@
       {
          script
          {
-            def app = docker.build("zimmate222/snakegame")
+            def app = docker.build("MaxQuist/hw5_realest")
             app.tag("latest")
          }
       }
@@ -70,13 +70,13 @@
     {
       agent
       {
-        label 'ubuntu-APPserver'
+        label 'ubuntu-Appserver-3120'
       }
       steps
       {
          script
          {
-            docker.withRegistry("https://registry.hub.docker.com", "zimmate")
+            docker.withRegistry("https://registry.hub.docker.com", "maxq")
             {
                 def app = docker.image("MaxQuist/hw5_realest")
                 app.push("latest")
