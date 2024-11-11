@@ -39,7 +39,7 @@
         }
         steps {
             script {
-                def scannerHome = tool 'SonarQubeScanner'
+                def scannerHome = tool 'SonarqubeScanner'
                 withSonarQubeEnv('sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner \
                         -Dsonar.projectKey=hw5_realest \
