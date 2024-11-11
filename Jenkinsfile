@@ -29,7 +29,7 @@ node('ubuntu-Appserver-3120')
                 def scannerHome = tool 'SonarQubeScanner'
                 withSonarQubeEnv('sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=gameapp \
+                    -Dsonar.projectKey=hw5_realest \
                     -Dsonar.sources=."
                 }
             }
