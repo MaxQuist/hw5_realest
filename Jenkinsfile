@@ -25,7 +25,7 @@
       steps
       {
         snykSecurity(
-            snykInstallation: 'Synk',
+            snykInstallation: 'Snyk',
             snykTokenId: 'snykid',
             severity: 'critical'
         )
