@@ -1,65 +1,107 @@
-node('ubuntu-Appserver-3120')
+ pipeline
 {
-    def app
-    stage('Cloning Git')
+  agent none
+ 
+  stages
+  {
+    stage('CLONE GIT REPOSITORY')
     {
-    /* Let's make sure we have the repository cloned to our workspace */
-    checkout scm
+      agent
+      {
+        label 'ubuntu-APPserver'
+      }
+      steps
+      {
+        checkout scm
+      }
     }
  
-      stage('SCA-SAST-SNYK-TEST') 
+    stage('SCA-SAST-SNYK-TEST')
+    {
+      agent
       {
-       agent 
-       {
-         label 'ubuntu-Appserver-3120'
-       }
-         snykSecurity(
-            snykInstallation: 'Snyk',
+        label 'ubuntu-APPserver'
+      }
+      steps
+      {
+        snykSecurity(
+            snykInstallation: 'Synk',
             snykTokenId: 'snykid',
             severity: 'critical'
-         )
-       }
-        stage('SonarQube Analysis')
-    {
+        )
+      }
+    }
+    
+    // from here down to next comment 
+    stage('SonarQube Analysis') {
         agent {
-            label 'ubuntu-Appserver-3120'
+            label 'ubuntu-APPserver'
         }
         steps {
             script {
                 def scannerHome = tool 'SonarQubeScanner'
                 withSonarQubeEnv('sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=hw5_realest \
-                    -Dsonar.sources=."
+                        -Dsonar.projectKey=ChatApp \
+                        -Dsonar.sources=."
                 }
             }
         }
     }
-    stage('Build-and-Tag')
+    // this is what we edited
+    
+    stage('BUILD-AND-TAG')
     {
-        agent {
-            label 'ubuntu-Appserver-3120'
-        }
-        steps {
-            script {
-                def app = docker.build("MaxQuist/hw5_realest")
-                app.tag("latest")
-            }
-        }
-    }
-    stage('Post-to-dockerhub')
-    {
-        docker.withRegistry('https://registry.hub.docker.com', 'maxq')
-        {
-         app.push("latest")
-        }
+      agent
+      {
+        label 'ubuntu-APPserver'
+      }
+      steps
+      {
+         script
+         {
+            def app = docker.build("zimmate222/snakegame")
+            app.tag("latest")
+         }
+      }
     }
  
-    stage('Pull-image-server')
+    stage('POST-TO-DOCKERHUB')
     {
+      agent
+      {
+        label 'ubuntu-APPserver'
+      }
+      steps
+      {
+         script
+         {
+            docker.withRegistry("https://registry.hub.docker.com", "zimmate")
+            {
+                def app = docker.image("zimmate222/snakegame")
+                app.push("latest")
+ 
+            }
+           
+         }
+      }
+    }
+ 
+    stage('DEPLOYMENT')
+    {
+      agent
+      {
+        label 'ubuntu-APPserver'
+      }
+      steps
+      {
         sh "docker-compose down"
         sh "docker-compose up -d"
+      }
     }
  
-}
-
+   
+   
+  }
+ 
+} 
